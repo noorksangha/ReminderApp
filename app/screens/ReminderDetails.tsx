@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, Image } from 'react-native';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
@@ -13,8 +13,13 @@ type ReminderDetailsScreenRouteProp = RouteProp<RootStackParamList, 'ReminderDet
 export default function ReminderDetailsScreen() {
   const navigation = useNavigation<ReminderDetailsScreenNavigationProp>();
   const route = useRoute<ReminderDetailsScreenRouteProp>();
+  //const route = useRoute<RouteProp<RootStackParamList, 'ReminderDetails'>>();
 
   const { reminder } = route.params;
+  console.log(reminder);
+  const reminderDate = new Date(reminder.date);
+  console.log('ReminderDetails Params:', route.params);
+
 
   // Initialize the video player with the videoUri
   const player = useVideoPlayer(reminder.videoUri, (player) => {
@@ -26,29 +31,40 @@ export default function ReminderDetailsScreen() {
 
   return (
     <View style={styles.contentContainer}>
-      <Text style={styles.title}>{reminder.type} Reminder</Text>
-      <Text style={styles.description}>{reminder.description}</Text>
-
-      {/* Video Section */}
-      <View style={styles.videoContainer}>
-        <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
-        <View style={styles.controlsContainer}>
-          <Button
-            title={isPlaying ? 'Pause' : 'Play'}
-            onPress={() => {
-              if (isPlaying) {
-                player.pause();
-              } else {
-                player.play();
-              }
-            }}
-          />
+      <Text style={styles.title}>{reminder ? reminder.type : 'Loading...'} Reminder</Text>
+      <Text style={styles.description}>Date: {reminderDate.toLocaleString()}</Text>
+      <Text style={styles.description}>{reminder ? reminder.description : 'Loading description...'}</Text>
+  
+      {/* Conditional Rendering for GIF or Video */}
+      {reminder.type === 'Water' ? (
+        <Image
+          source={require('@/assets/gifs/water.gif')} // Replace with your GIF path
+          style={styles.gifStyle} // Add your own styles for the GIF
+          resizeMode="contain" // Adjusts how the GIF is resized
+        />
+      ) : (
+        <View style={styles.videoContainer}>
+          {/* Video Section */}
+          <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
+          <View style={styles.controlsContainer}>
+            <Button
+              title={isPlaying ? 'Pause' : 'Play'}
+              onPress={() => {
+                if (isPlaying) {
+                  player.pause();
+                } else {
+                  player.play();
+                }
+              }}
+            />
+          </View>
         </View>
-      </View>
-
+      )}
+  
       <Button title="Go Back to Home" onPress={() => navigation.navigate('Home')} />
     </View>
   );
+  
 }
 
 // Styles
@@ -75,16 +91,25 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color:'white',
   },
   description: {
     fontSize: 18,
     marginBottom: 10,
     textAlign: 'center',
+    color:'white',
   },
   quote: {
     fontSize: 16,
     fontStyle: 'italic',
     marginBottom: 20,
     textAlign: 'center',
+    color:'white',
   },
+  gifStyle: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
+  },
+  
 });

@@ -9,7 +9,7 @@ import { useReminders } from '../context/RemindersContext';
 
 type AddReminderScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AddReminder'>;
 
-const reminderTypes = ['Medication', 'Exercise', 'Meeting'];
+const reminderTypes = ['Break', 'Exercise', 'Water'];
 
 export default function AddReminderScreen() {
   const navigation = useNavigation<AddReminderScreenNavigationProp>();
@@ -29,30 +29,32 @@ export default function AddReminderScreen() {
 
   const scheduleNotification = async (reminder: Reminder) => {
     const quotes = {
-      Medication: "Take care of your body. It's the only place you have to live.",
+      Break: "Take care of your body. It's the only place you have to live.",
       Exercise: 'Push yourself, because no one else is going to do it for you.',
-      Meeting: 'Opportunities don’t happen, you create them.',
+      Water: 'Drink a glass of water to stay hydrated!!',
     };
-  
-  
     const videos = {
-      Medication: 'https://www.youtube.com/watch?v=inpok4MKVLM',
-      "Exercise": require('@/assets/videos/excercise.mp4'),
-      Meeting: 'https://www.youtube.com/watch?v=l9_SoClAO5g',
+      Break: require('@/assets/videos/break.mp4'),
+      Exercise: require('@/assets/videos/excercise.mp4'),
+      Water: require('@/assets/gifs/water.gif'),
     };
     try {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: `Reminder: ${reminder.type}`,
           body: reminder.description,
-          sound: true,
-          data: { reminder ,
-            quote: quotes,
-            videoUri: videos,}, // Optional: Pass reminder data to the notification
+          data: {
+            reminder: {
+              ...reminder,
+              date: reminder.date instanceof Date ? reminder.date.toISOString() : reminder.date, // Serialize the date
+            },
+          },
         },
-        trigger: new Date(reminder.date), // Use the date directly for the notification trigger
+        trigger: new Date(reminder.date), // Set the trigger
       });
-  
+      
+      
+      
       Alert.alert('Success', 'Reminder has been set!');
     } catch (error) {
            const errorMessage =
@@ -70,16 +72,21 @@ export default function AddReminderScreen() {
       return;
     }
     const videos = {
-      "Medication": 'https://www.youtube.com/watch?v=inpok4MKVLM',
+      "Break": require('@/assets/videos/break.mp4'),
       "Exercise": require('@/assets/videos/excercise.mp4'),
-      "Meeting": 'https://www.youtube.com/watch?v=l9_SoClAO5g',
+      "Water": require('@/assets/gifs/water.gif'),
     };
+    const description ={
+      "Break": 'Take care of your body. Its the only place you have to',
+      "Exercise": 'Push yourself, because no one else is going to do it for you.',
+      "Water": 'Opportunities don’t happen, you create them.',
+    }
 
     const newReminder: Reminder = {
       id: Date.now().toString(),
       type: selectedType,
       date: date,
-      description: `This is a reminder for ${selectedType}.`,
+      description: description[selectedType as keyof typeof description],
       videoUri: videos[selectedType as keyof typeof videos], // Type assertion here
     };
 
