@@ -5,19 +5,31 @@ import { StackNavigationProp } from '@react-navigation/stack';
 export type Reminder = {
   id: string;
   type: string;
-  date: Date;
+  date: string | Date; // Allow both string and Date types
   description: string;
+  videoUri: string;
 };
 
-// Update RootStackParamList with consistent types
-// app/types.ts
+
 export type RootStackParamList = {
   Home: undefined;
-  AddReminder: undefined; // Remove the onAddReminder parameter here
-  ReminderDetails: { reminder: Reminder }; // Keep the reminder parameter for ReminderDetails
+  AddReminder: undefined;
+  ReminderDetails: {
+    reminder: Reminder;
+    quote: string;
+    videoUri: string;
+  };
 };
+
+
+
+
+
+export default {};
+
 
 // Type definitions for navigation props
 export type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 export type AddReminderScreenNavigationProp = StackNavigationProp<RootStackParamList, 'AddReminder'>;
 export type ReminderDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ReminderDetails'>;
+export {}; // Ensure there's a valid export

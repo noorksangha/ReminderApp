@@ -11,9 +11,9 @@ const RemindersContext = createContext<RemindersContextType | undefined>(undefin
 
 export const RemindersProvider = ({ children }: { children: ReactNode }) => {
   const [reminders, setReminders] = useState<Reminder[]>([
-    { id: '1', type: 'Medication', date: new Date(Date.now() + 60 * 60 * 1000), description: 'Take your medication' },
-    { id: '2', type: 'Exercise', date: new Date(Date.now() + 2 * 60 * 60 * 1000), description: 'Time for a workout' },
-    { id: '3', type: 'Meeting', date: new Date(Date.now() + 3 * 60 * 60 * 1000), description: 'Project meeting' },
+    { id: '1', type: 'Medication', date: new Date(Date.now() + 60 * 60 * 1000), description: 'Take your medication' , videoUri:'https://www.youtube.com/watch?v=inpok4MKVLM'},
+    { id: '2', type: 'Exercise', date: new Date(Date.now() + 2 * 60 * 60 * 1000), description: 'Time for a workout', videoUri:'https://www.youtube.com/watch?v=l9_SoClAO5g' },
+    { id: '3', type: 'Meeting', date: new Date(Date.now() + 3 * 60 * 60 * 1000), description: 'Project meeting' , videoUri:'https://www.youtube.com/watch?v=l9_SoClAO5g'},
   ]);
 
   const addReminder = (reminder: Reminder) => {
