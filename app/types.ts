@@ -16,8 +16,6 @@ export type RootStackParamList = {
   AddReminder: undefined;
   ReminderDetails: {
     reminder: Reminder;
-    quote: string;
-    videoUri: string;
   };
 };
 
