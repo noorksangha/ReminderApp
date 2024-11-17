@@ -6,16 +6,18 @@ import { RootStackParamList } from '../types';
 import { useEvent } from 'expo';
 import { useVideoPlayer, VideoView } from 'expo-video';
 
+// ReminderDetailsScreen Component
+type ReminderDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ReminderDetails'>;
+type ReminderDetailsScreenRouteProp = RouteProp<RootStackParamList, 'ReminderDetails'>;
 
+export default function ReminderDetailsScreen() {
+  const navigation = useNavigation<ReminderDetailsScreenNavigationProp>();
+  const route = useRoute<ReminderDetailsScreenRouteProp>();
 
-const videoSource = require('@/assets/videos/excercise.mp4')
-// VideoScreen Component
-export const VideoScreen = () => {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'ReminderDetails'>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ReminderDetails'>>();
-  const { reminder, quote } = route.params;
+  const { reminder } = route.params;
 
-  const player = useVideoPlayer(videoSource, (player) => {
+  // Initialize the video player with the videoUri
+  const player = useVideoPlayer(reminder.videoUri, (player) => {
     player.loop = true;
     player.play();
   });
@@ -23,40 +25,26 @@ export const VideoScreen = () => {
   const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
   return (
-    <View style={styles.videoContainer}>
-      <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
-      <View style={styles.controlsContainer}>
-        <Button
-          title={isPlaying ? 'Pause' : 'Play'}
-          onPress={() => {
-            if (isPlaying) {
-              player.pause();
-            } else {
-              player.play();
-            }
-          }}
-        />
-      </View>
-    </View>
-  );
-};
-
-// ReminderDetailsScreen Component
-export default function ReminderDetailsScreen() {
-  const navigation = useNavigation<StackNavigationProp<RootStackParamList, 'ReminderDetails'>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'ReminderDetails'>>();
-
-  // Extract reminder and additional data (quote and videoUri) from route params
-  const { reminder, quote } = route.params;
-
-  return (
     <View style={styles.contentContainer}>
       <Text style={styles.title}>{reminder.type} Reminder</Text>
       <Text style={styles.description}>{reminder.description}</Text>
-      <Text style={styles.quote}>"{quote}"</Text>
 
-      {/* Add the VideoScreen Component */}
-      <VideoScreen />
+      {/* Video Section */}
+      <View style={styles.videoContainer}>
+        <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
+        <View style={styles.controlsContainer}>
+          <Button
+            title={isPlaying ? 'Pause' : 'Play'}
+            onPress={() => {
+              if (isPlaying) {
+                player.pause();
+              } else {
+                player.play();
+              }
+            }}
+          />
+        </View>
+      </View>
 
       <Button title="Go Back to Home" onPress={() => navigation.navigate('Home')} />
     </View>

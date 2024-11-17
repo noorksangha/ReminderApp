@@ -14,16 +14,9 @@ export default function HomeScreen() {
     navigation.navigate('AddReminder');
   };
 
-  const navigateToReminderDetails = (reminder: Reminder) => {
-    navigation.navigate('ReminderDetails', {
-      reminder: {
-        ...reminder,
-        date: reminder.date instanceof Date ? reminder.date.toISOString() : reminder.date, // Ensure date is serialized
-      },
-      quote: 'You can do this!!',
-            videoUri: 'https://www.youtube.com/watch?v=l9_SoClAO5g',
-    });
-
+    // Specify that reminder is of type Reminder
+    const navigateToReminderDetails = (reminder: Reminder) => {
+      navigation.navigate('ReminderDetails', { reminder });
     
   };
   
