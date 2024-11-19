@@ -34,7 +34,7 @@ export default function ReminderDetailsScreen() {
       <Text style={styles.title}>{reminder ? reminder.type : 'Loading...'} Reminder</Text>
       <Text style={styles.description}>Date: {reminderDate.toLocaleString()}</Text>
       <Text style={styles.description}>{reminder ? reminder.description : 'Loading description...'}</Text>
-  
+
       {/* Conditional Rendering for GIF or Video */}
       {reminder.type === 'Water' ? (
         <Image
@@ -60,11 +60,11 @@ export default function ReminderDetailsScreen() {
           </View>
         </View>
       )}
-  
+
       <Button title="Go Back to Home" onPress={() => navigation.navigate('Home')} />
     </View>
   );
-  
+
 }
 
 // Styles
@@ -111,5 +111,5 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 20,
   },
-  
+
 });

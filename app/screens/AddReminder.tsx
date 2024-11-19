@@ -52,9 +52,9 @@ export default function AddReminderScreen() {
         },
         trigger: new Date(reminder.date), // Set the trigger
       });
-      
-      
-      
+
+
+
       Alert.alert('Success', 'Reminder has been set!');
     } catch (error) {
            const errorMessage =
@@ -62,7 +62,7 @@ export default function AddReminderScreen() {
            Alert.alert('Error', `Failed to schedule the notification: ${errorMessage}`);
         }
   };
-  
+
   
   
 
