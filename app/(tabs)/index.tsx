@@ -15,24 +15,24 @@ export default function MainNavigator() {
   const navigation = useNavigation(); // Access navigation object
 
 
-useEffect(() => {
-  const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-    const reminder = response.notification.request.content.data.reminder;
-    console.log('Notification tapped:', reminder);
-
-    // Debugging: Check if navigation is being called correctly
-    if (reminder && navigation) {
-      console.log('Navigating to ReminderDetails...');
-      navigation.navigate('ReminderDetails', { reminder });
-    } else {
-      console.log('Reminder or navigation is undefined');
-    }
-  });
-
-  return () => {
-    notificationResponseListener.remove();
-  };
-}, [navigation]);
+// useEffect(() => {
+//   const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+//     const reminder = response.notification.request.content.data.reminder;
+//     console.log('Notification tapped:', reminder);
+//
+//     // Debugging: Check if navigation is being called correctly
+//     if (reminder && navigation) {
+//       console.log('Navigating to ReminderDetails...');
+//       navigation.navigate('ReminderDetails', { reminder });
+//     } else {
+//       console.log('Reminder or navigation is undefined');
+//     }
+//   });
+//
+//   return () => {
+//     notificationResponseListener.remove();
+//   };
+// }, [navigation]);
 
 
 

@@ -43,6 +43,7 @@ export default function AddReminderScreen() {
         content: {
           title: `Reminder: ${reminder.type}`,
           body: reminder.description,
+          sound: 'default',
           data: {
             reminder: {
               ...reminder,
