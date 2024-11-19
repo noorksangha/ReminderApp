@@ -7,25 +7,34 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { MyLightTheme, MyDarkTheme } from '../themes';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const currentTheme = colorScheme === 'light' ? MyLightTheme : MyDarkTheme;
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: currentTheme.colors.tint,
+        tabBarStyle: {
+          backgroundColor: currentTheme.colors.primary,
+        },
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
+        tabBarLabelStyle: {
+          color: currentTheme.colors.text,
+        },
+        tabBarInactiveTintColor: currentTheme.colors.inactive,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
