@@ -73,7 +73,7 @@ export default function HomeScreen() {
           {item.date instanceof Date ? item.date.toLocaleString() : ''}
         </Text>
         <TouchableOpacity onPress={() => handleDeleteReminder(item.id)}>
-         <Text style={styles.deleteText}>Delete</Text>
+         <Text style={{ fontSize: 14, color: 'red', fontWeight: 'bold' }}>Delete</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     )}
@@ -84,51 +84,3 @@ export default function HomeScreen() {
 
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  noRemindersText: {
-    fontSize: 16,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  list: {
-    marginBottom: 20,
-  },
-  reminderCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
-    marginVertical: 5,
-    backgroundColor: '#f9f9f9',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  cardContent: {
-    flex: 1,
-  },
-  reminderType: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  reminderDate: {
-    fontSize: 14,
-    color: '#666',
-  },
-  deleteText: {
-    fontSize: 14,
-    color: 'red',
-    fontWeight: 'bold',
-  },
-});
