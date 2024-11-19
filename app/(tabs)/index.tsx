@@ -19,24 +19,25 @@ export default function MainNavigator() {
 
   const currentTheme = colorScheme === 'light' ? MyLightTheme : MyDarkTheme; // Choose theme based on state
 
+    //code for managing notif navigation to reminderdetails screen
 
-    useEffect(() => {
-        // Set up the notification response listener
-        const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-            // Extract the reminder data from the notification response
-            const reminder: Reminder = response.notification.request.content.data.reminder;
-
-            console.log('Notification tapped:', reminder);
-
-            // Navigate to the ReminderDetails screen with the reminder data
-            navigation.navigate('ReminderDetails', { reminder });
-        });
-
-        // Clean up the listener when the component unmounts
-        return () => {
-            notificationResponseListener.remove();
-        };
-    }, [navigation]); // Make sure navigation is in the dependency array
+    // useEffect(() => {
+    //     // Set up the notification response listener
+    //     const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+    //         // Extract the reminder data from the notification response
+    //         const reminder: Reminder = response.notification.request.content.data.reminder;
+    //
+    //         console.log('Notification tapped:', reminder);
+    //
+    //         // Navigate to the ReminderDetails screen with the reminder data
+    //         navigation.navigate('ReminderDetails', { reminder });
+    //     });
+    //
+    //     // Clean up the listener when the component unmounts
+    //     return () => {
+    //         notificationResponseListener.remove();
+    //     };
+    // }, [navigation]);
 
   return (
     <RemindersProvider>
