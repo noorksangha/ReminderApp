@@ -8,37 +8,35 @@ import ReminderDetailsScreen from '../screens/ReminderDetails';
 import { RemindersProvider } from '../context/RemindersContext';
 import { useColorScheme } from 'react-native';
 import { MyLightTheme, MyDarkTheme } from '../themes';
-import { Reminder } from '../types';
+import {Reminder, ReminderDetailsScreenNavigationProp} from '../types';
 
 const Stack = createStackNavigator();
 
 export default function MainNavigator() {
-  const colorScheme = useColorScheme();  // Detects the system theme (light or dark)
-
+    const navigation = useNavigation<ReminderDetailsScreenNavigationProp>();
+    const colorScheme = useColorScheme();  // Detects the system theme (light or dark)
   const [theme, setTheme] = useState('light'); // toggles theme according to current theme
 
   const currentTheme = colorScheme === 'light' ? MyLightTheme : MyDarkTheme; // Choose theme based on state
 
-  useEffect(() => {
-    // Set up the notification response listener
-    const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
-      const reminder = response.notification.request.content.data.reminder;
-      console.log('Notification tapped:', reminder);
 
-      if (reminder) {
-        console.log('Navigating to ReminderDetails...');
-        // Navigate to the ReminderDetails screen
-        navigation.navigate('ReminderDetails', { reminder });
-      } else {
-        console.log('Reminder or navigation is undefined');
-      }
-    });
+    useEffect(() => {
+        // Set up the notification response listener
+        const notificationResponseListener = Notifications.addNotificationResponseReceivedListener((response) => {
+            // Extract the reminder data from the notification response
+            const reminder: Reminder = response.notification.request.content.data.reminder;
 
-    // Cleanup the listener when the component is unmounted
-    return () => {
-      notificationResponseListener.remove();
-    };
-  }, []); // Empty array ensures this only runs once when the component is mounted
+            console.log('Notification tapped:', reminder);
+
+            // Navigate to the ReminderDetails screen with the reminder data
+            navigation.navigate('ReminderDetails', { reminder });
+        });
+
+        // Clean up the listener when the component unmounts
+        return () => {
+            notificationResponseListener.remove();
+        };
+    }, [navigation]); // Make sure navigation is in the dependency array
 
   return (
     <RemindersProvider>
