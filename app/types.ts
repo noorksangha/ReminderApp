@@ -14,7 +14,10 @@ export type Reminder = {
 export type RootStackParamList = {
   Home: undefined;
   AddReminder: undefined;
-  ReminderDetails: { reminder: Reminder };
+  ReminderDetails: {
+    reminder: string; // Allow reminder to be a stringified JSON object
+  };
+
 };
 
 

@@ -6,7 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-
+import { useRouter } from 'expo-router'; // For navigation
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -23,15 +23,21 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  const router = useRouter(); // Initialize the router for navigation
+
   useEffect(() => {
     // Register for notifications
     registerForPushNotificationsAsync();
 
     // Listen for notifications
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const data = response.notification.request.content.data;
-      if (notificationHandler) {
-        notificationHandler(data);
+      const reminder = response.notification.request.content.data.reminder;
+      if (reminder) {
+        // Navigate to ReminderDetails screen
+        router.push({
+          pathname: '/screens/ReminderDetails',
+          params: { reminder: JSON.stringify(reminder) }, // Serialize the reminder object
+        });
       }
     });
 
@@ -40,7 +46,7 @@ export default function RootLayout() {
     }
 
     return () => subscription.remove();
-  }, [loaded]);
+  }, [loaded, router]);
 
   // Function to register for notifications
   async function registerForPushNotificationsAsync() {

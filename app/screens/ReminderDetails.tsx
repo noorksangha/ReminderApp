@@ -1,25 +1,30 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet, Image } from 'react-native';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types';
-import { useEvent } from 'expo';
+import { useRoute, useNavigation, RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '../types'; // Ensure this is correctly imported
 import { useVideoPlayer, VideoView } from 'expo-video';
 
-// ReminderDetailsScreen Component
-type ReminderDetailsScreenNavigationProp = StackNavigationProp<RootStackParamList, 'ReminderDetails'>;
+// Define the type for the route prop
 type ReminderDetailsScreenRouteProp = RouteProp<RootStackParamList, 'ReminderDetails'>;
 
 export default function ReminderDetailsScreen() {
-  const navigation = useNavigation<ReminderDetailsScreenNavigationProp>();
-  const route = useRoute<ReminderDetailsScreenRouteProp>();
-  //const route = useRoute<RouteProp<RootStackParamList, 'ReminderDetails'>>();
+  const route = useRoute<ReminderDetailsScreenRouteProp>(); // Type the route
+  const navigation = useNavigation(); // Use the navigation hook
 
-  const { reminder } = route.params;
-  console.log(reminder);
+  // Parse the reminder object from the stringified JSON in route params
+  const reminder = route.params?.reminder ? JSON.parse(route.params.reminder as unknown as string) : null;
+
+  if (!reminder) {
+    // Fallback if reminder is not provided
+    return (
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>No Reminder Data Found</Text>
+        <Button title="Go Back" onPress={() => navigation.goBack()} />
+      </View>
+    );
+  }
+
   const reminderDate = new Date(reminder.date);
-  console.log('ReminderDetails Params:', route.params);
-
 
   // Initialize the video player with the videoUri
   const player = useVideoPlayer(reminder.videoUri, (player) => {
@@ -27,44 +32,34 @@ export default function ReminderDetailsScreen() {
     player.play();
   });
 
-  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
-
   return (
     <View style={styles.contentContainer}>
-      <Text style={styles.title}>{reminder ? reminder.type : 'Loading...'} Reminder</Text>
+      <Text style={styles.title}>{reminder.type} Reminder</Text>
       <Text style={styles.description}>Date: {reminderDate.toLocaleString()}</Text>
-      <Text style={styles.description}>{reminder ? reminder.description : 'Loading description...'}</Text>
+      <Text style={styles.description}>{reminder.description}</Text>
 
-      {/* Conditional Rendering for GIF or Video */}
+
       {reminder.type === 'Water' ? (
         <Image
           source={require('@/assets/gifs/water.gif')} // Replace with your GIF path
-          style={styles.gifStyle} // Add your own styles for the GIF
-          resizeMode="contain" // Adjusts how the GIF is resized
+          style={styles.gifStyle}
+          resizeMode="contain"
         />
       ) : (
         <View style={styles.videoContainer}>
-          {/* Video Section */}
           <VideoView style={styles.video} player={player} allowsFullscreen allowsPictureInPicture />
           <View style={styles.controlsContainer}>
             <Button
-              title={isPlaying ? 'Pause' : 'Play'}
-              onPress={() => {
-                if (isPlaying) {
-                  player.pause();
-                } else {
-                  player.play();
-                }
-              }}
+              title={player.playing ? 'Pause' : 'Play'}
+              onPress={() => (player.playing ? player.pause() : player.play())}
             />
           </View>
         </View>
       )}
 
-      <Button title="Go Back to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go Back" onPress={() => navigation.goBack()} />
     </View>
   );
-
 }
 
 // Styles
@@ -91,20 +86,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color:'white',
+    color: 'white',
   },
   description: {
     fontSize: 18,
     marginBottom: 10,
     textAlign: 'center',
-    color:'white',
-  },
-  quote: {
-    fontSize: 16,
-    fontStyle: 'italic',
-    marginBottom: 20,
-    textAlign: 'center',
-    color:'white',
+    color: 'white',
   },
   gifStyle: {
     width: 200,
