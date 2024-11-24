@@ -36,7 +36,7 @@ export default function RootLayout() {
         // Navigate to ReminderDetails screen
         router.push({
           pathname: '/screens/ReminderDetails',
-          params: { reminder: JSON.stringify(reminder) }, // Pass the reminder as a query parameter
+          params: { reminder: JSON.stringify(reminder) }, // Serialize the reminder object
         });
       }
     });
