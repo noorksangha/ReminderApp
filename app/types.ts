@@ -17,7 +17,9 @@ export type RootStackParamList = {
   ReminderDetails: {
     reminder: string; // Allow reminder to be a stringified JSON object
   };
+
 };
+
 
 
 

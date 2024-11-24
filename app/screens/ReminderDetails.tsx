@@ -38,6 +38,7 @@ export default function ReminderDetailsScreen() {
       <Text style={styles.description}>Date: {reminderDate.toLocaleString()}</Text>
       <Text style={styles.description}>{reminder.description}</Text>
 
+
       {reminder.type === 'Water' ? (
         <Image
           source={require('@/assets/gifs/water.gif')} // Replace with your GIF path
@@ -98,4 +99,5 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: 20,
   },
+
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { HomeScreenNavigationProp } from '../types';
 import { useReminders } from '../context/RemindersContext';
@@ -7,7 +7,7 @@ import { Reminder } from '../types';
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  const { reminders } = useReminders();
+  const { reminders, removeReminder } = useReminders();
 
   // Navigate to Add Reminder Screen
   const navigateToAddReminder = () => {
@@ -22,6 +22,24 @@ export default function HomeScreen() {
         date: reminder.date instanceof Date ? reminder.date.toISOString() : reminder.date, // Ensure date is serialized
       }),
     });
+  };
+
+  // Remove a reminder
+  const handleDeleteReminder = (id: string) => {
+    Alert.alert(
+      'Delete Reminder',
+      'Are you sure you want to delete this reminder?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => removeReminder(id),
+        },
+      ]
+    );
   };
 
   return (
@@ -48,6 +66,9 @@ export default function HomeScreen() {
             <Text style={{ fontSize: 14, color: '#666' }}>
               {item.date instanceof Date ? item.date.toLocaleString() : item.date}
             </Text>
+            <TouchableOpacity onPress={() => handleDeleteReminder(item.id)}>
+              <Text style={{ fontSize: 14, color: 'red', fontWeight: 'bold' }}>Delete</Text>
+            </TouchableOpacity>
           </TouchableOpacity>
         )}
       />
