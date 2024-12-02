@@ -31,7 +31,10 @@ export default function RootLayout() {
 
     // Listen for notifications
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
-      const reminder = response.notification.request.content.data.reminder;
+      console.log('Notification Response Received:', response);
+      const reminder = response.notification.request.content.data?.reminder;
+      console.log('Parsed Reminder:', reminder);
+
       if (reminder) {
         // Navigate to ReminderDetails screen
         router.push({

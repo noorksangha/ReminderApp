@@ -13,7 +13,18 @@ export default function ReminderDetailsScreen() {
 
   // Parse the reminder object from the stringified JSON in route params
   const reminder = route.params?.reminder ? JSON.parse(route.params.reminder as unknown as string) : null;
-
+  const formatDaysOfWeek = (daysOfWeek: number[] | undefined): string => {
+    if (!daysOfWeek || daysOfWeek.length === 0) return 'No days selected';
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return daysOfWeek.map((day) => dayNames[day - 1]).join(', ');
+  };
+  
+  const formatTime = (time: { hour: number; minute: number } | null): string => {
+    if (!time) return 'No time set';
+    const formattedHour = time.hour.toString().padStart(2, '0');
+    const formattedMinute = time.minute.toString().padStart(2, '0');
+    return `${formattedHour}:${formattedMinute}`;
+  };
   if (!reminder) {
     // Fallback if reminder is not provided
     return (
@@ -35,7 +46,22 @@ export default function ReminderDetailsScreen() {
   return (
     <View style={styles.contentContainer}>
       <Text style={styles.title}>{reminder.type} Reminder</Text>
-      <Text style={styles.description}>Date: {reminderDate.toLocaleString()}</Text>
+      {reminder.reminderMode === 'single' && reminder.date && (
+      <Text style={styles.description}>
+        Date: {new Date(reminder.date).toLocaleString()}
+      </Text>
+    )}
+
+    {reminder.reminderMode === 'repetitive' && (
+      <>
+        <Text style={styles.description}>
+          Days: {formatDaysOfWeek(reminder.daysOfWeek)}
+        </Text>
+        <Text style={styles.description}>
+          Time: {formatTime(reminder.time)}
+        </Text>
+      </>
+    )}
       <Text style={styles.description}>{reminder.description}</Text>
 
 

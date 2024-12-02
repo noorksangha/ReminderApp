@@ -5,9 +5,12 @@ import { StackNavigationProp } from '@react-navigation/stack';
 export type Reminder = {
   id: string;
   type: string;
-  date: string | Date; // Allow both string and Date types
+  date?: string | Date; // Allow both string and Date types
+  daysOfWeek?: number[];
+  time?:{hour:number; minute:number} | null;
   description: string;
   videoUri: string;
+  reminderMode: 'single' | 'repetitive';
 };
 
 
@@ -19,9 +22,6 @@ export type RootStackParamList = {
   };
 
 };
-
-
-
 
 
 
