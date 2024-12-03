@@ -25,13 +25,13 @@ export default function AddReminderScreen() {
   const [pickerMode, setPickerMode] = useState<'datetime' | 'time'>('datetime'); // To handle picker mode
 
   const weekdays = [
-    { id: 1, name: 'Sunday' },
-    { id: 2, name: 'Monday' },
-    { id: 3, name: 'Tuesday' },
-    { id: 4, name: 'Wednesday' },
-    { id: 5, name: 'Thursday' },
-    { id: 6, name: 'Friday' },
-    { id: 7, name: 'Saturday' },
+    { id: 1, name: 'Sun' },
+    { id: 2, name: 'Mon' },
+    { id: 3, name: 'Tue' },
+    { id: 4, name: 'Wed' },
+    { id: 5, name: 'Thu' },
+    { id: 6, name: 'Fri' },
+    { id: 7, name: 'Sat' },
   ];
   
   const videos = {
@@ -111,7 +111,7 @@ export default function AddReminderScreen() {
         trigger: new Date(reminder.date as Date),
       });
 
-      Alert.alert('Success', 'Single reminder has been set!');
+      // Alert.alert('Success', 'Single reminder has been set!');
     } catch (error) {
       Alert.alert('Error', `Failed to schedule notification: ${error}`);
     }
@@ -137,10 +137,16 @@ export default function AddReminderScreen() {
         });
       }
 
-      Alert.alert('Success', 'Repetitive reminder has been set!');
+      // Alert.alert('Success', 'Repetitive reminder has been set!');
     } catch (error) {
       Alert.alert('Error', `Failed to schedule notification: ${error}`);
     }
+  };
+
+  const toggleDaySelection = (id: number) => {
+    setSelectedDays((prev) =>
+        prev.includes(id) ? prev.filter((day) => day !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -189,14 +195,21 @@ export default function AddReminderScreen() {
       {reminderMode === 'repetitive' && (
         <>
           <Text style={styles.title}>Select Days of the Week:</Text>
-          <MultiSelect
-            items={weekdays}
-            uniqueKey="id"
-            onSelectedItemsChange={(selectedItems) => setSelectedDays(selectedItems)}
-            selectedItems={selectedDays}
-            selectText="Pick Days"
-            searchInputPlaceholderText="Search Days..."
-          />
+          <View style={styles.daySelector}>
+            {weekdays.map((day) => (
+                <TouchableOpacity
+                    key={day.id}
+                    onPress={() => toggleDaySelection(day.id)}
+                    style={[
+                      styles.dayButton,
+                      selectedDays.includes(day.id) && styles.selectedDayButton,
+                    ]}
+                >
+                  <Text style={styles.dayButtonText}>{day.name}</Text>
+                </TouchableOpacity>
+            ))}
+          </View>
+
           <Text style={styles.title}>Select Time:</Text>
           <Button title="Pick Time" onPress={() => showDatePicker('time')} />
           <DateTimePickerModal
@@ -224,8 +237,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 14,
     marginVertical: 10,
+    // color: '#ffffff',
   },
   button: {
     padding: 10,
@@ -239,6 +253,24 @@ const styles = StyleSheet.create({
   modeSelector: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginVertical: 8,
+  },
+  daySelector: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginVertical: 10,
+  },
+  dayButton: {
+    padding: 7,
+    margin: 5,
+    borderRadius: 20,
+    backgroundColor: '#f0f0f0',
+  },
+  selectedDayButton: {
+    backgroundColor: '#4CAF50',
+  },
+  dayButtonText: {
+    fontSize: 13,
   },
 });

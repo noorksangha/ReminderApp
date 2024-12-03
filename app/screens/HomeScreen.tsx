@@ -4,6 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { HomeScreenNavigationProp } from '../types';
 import { useReminders } from '../context/RemindersContext';
 import { Reminder } from '../types';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
@@ -51,12 +53,19 @@ export default function HomeScreen() {
 
   // Format time for display
   // Format time for display
-const formatTime = (time: { hour: number; minute: number } | null | undefined): string => {
-  if (!time) return ''; // Handle null or undefined
-  const hour = time.hour < 10 ? `0${time.hour}` : time.hour;
-  const minute = time.minute < 10 ? `0${time.minute}` : time.minute;
-  return `${hour}:${minute}`;
-};
+    const formatTime = (time: { hour: number; minute: number } | null | undefined): string => {
+        if (!time) return ''; // Handle null or undefined
+
+        let hour = time.hour;
+        const minute = time.minute < 10 ? `0${time.minute}` : time.minute; // Always show minutes with two digits
+        const ampm = hour >= 12 ? 'PM' : 'AM'; // Determine AM or PM
+
+        hour = hour % 12; // Convert to 12-hour format
+        hour = hour ? hour : 12; // If hour is 0 (midnight), display 12 instead
+
+        return `${hour}:${minute} ${ampm}`;
+    };
+
 
 
   return (
@@ -70,6 +79,9 @@ const formatTime = (time: { hour: number; minute: number } | null | undefined): 
         renderItem={({ item }) => (
           <TouchableOpacity
             style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
               padding: 10,
               marginVertical: 5,
               backgroundColor: '#f9f9f9',
@@ -79,6 +91,7 @@ const formatTime = (time: { hour: number; minute: number } | null | undefined): 
             }}
             onPress={() => navigateToReminderDetails(item)}
           >
+              <View style={{flex: 1}}>
             <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{item.type}</Text>
             {item.reminderMode === 'single' && (
               <Text style={{ fontSize: 14, color: '#666' }}>
@@ -88,18 +101,19 @@ const formatTime = (time: { hour: number; minute: number } | null | undefined): 
             {item.reminderMode === 'repetitive' && (
               <>
                 <Text style={{ fontSize: 14, color: '#666' }}>
-                  Days: {formatDaysOfWeek(item.daysOfWeek)}
+                  Repeat On: {formatDaysOfWeek(item.daysOfWeek)}
                 </Text>
                 <Text style={{ fontSize: 14, color: '#666' }}>Time: {formatTime(item.time)}</Text>
               </>
             )}
+              </View>
+
             <TouchableOpacity onPress={() => handleDeleteReminder(item.id)}>
-              <Text style={{ fontSize: 14, color: 'red', fontWeight: 'bold' }}>Delete</Text>
+                <Icon name="delete" size={20} color="red" />
             </TouchableOpacity>
           </TouchableOpacity>
         )}
       />
-
       <Button title="Add Reminder" onPress={navigateToAddReminder} />
     </View>
   );
